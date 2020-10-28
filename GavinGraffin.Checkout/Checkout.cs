@@ -5,10 +5,17 @@ namespace GavinGraffin.Checkout
 {
     public class Checkout
     {
-        private readonly IDictionary<string, decimal> _priceList;
+        private readonly IPriceList _priceList;
+
         private readonly IDictionary<string, int> _scannedItems;
 
         public Checkout(IDictionary<string, decimal> priceList)
+            : this(new PriceList(priceList))
+        {
+            // this may go - at the moment just propping up the existing tests
+        }
+
+        public Checkout(IPriceList priceList)
         {
             _priceList = priceList;
             _scannedItems = new Dictionary<string, int>();
@@ -42,12 +49,8 @@ namespace GavinGraffin.Checkout
 
             foreach (var item in _scannedItems)
             {
-                if (!_priceList.TryGetValue(item.Key, out var itemPrice))
-                {
-                    throw new Exception($"Invalid SKU '{item.Key}'.");
-                }
-
-                total += itemPrice * item.Value;
+                var skuPrice = _priceList.GetPriceForSku(item.Key);
+                total += skuPrice * item.Value;
             }
 
             return total;
