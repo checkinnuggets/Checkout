@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GavinGraffin.Checkout
 {
     public class Checkout
     {
+        private readonly IDictionary<string, decimal> _priceList;
         private readonly IDictionary<string, int> _scannedItems;
 
-        public Checkout()
+        public Checkout(IDictionary<string, decimal> priceList)
         {
+            _priceList = priceList;
             _scannedItems = new Dictionary<string, int>();
         }
 
@@ -31,6 +34,23 @@ namespace GavinGraffin.Checkout
             }
 
             return result;
+        }
+
+        public decimal GetTotal()
+        {
+            decimal total = 0;
+
+            foreach (var item in _scannedItems)
+            {
+                if (!_priceList.TryGetValue(item.Key, out var itemPrice))
+                {
+                    throw new Exception($"Invalid SKU '{item.Key}'.");
+                }
+
+                total += itemPrice * item.Value;
+            }
+
+            return total;
         }
     }
 }
