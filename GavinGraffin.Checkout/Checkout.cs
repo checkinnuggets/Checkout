@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using GavinGraffin.Checkout.Models;
 
 namespace GavinGraffin.Checkout
 {
@@ -9,7 +11,7 @@ namespace GavinGraffin.Checkout
         private readonly IDictionary<string, int> _scannedItems;
 
         public Checkout(IDictionary<string, decimal> priceList)
-            : this(new PriceList(priceList))
+            : this(new PriceList(priceList, new Dictionary<string, SpecialOffer>()))
         {
             // this may go - at the moment just propping up the existing tests
         }
@@ -49,7 +51,21 @@ namespace GavinGraffin.Checkout
             foreach (var item in _scannedItems)
             {
                 var skuPrice = _priceList.GetPriceForSku(item.Key);
-                total += skuPrice * item.Value;
+
+                var specialOffer = _priceList.GetSpecialOfferForSku(item.Key);
+
+                if (specialOffer == null)
+                {
+                    total += skuPrice * item.Value;
+                }
+                else
+                {
+                    var fullPriceItems = item.Value % specialOffer.Quantity;
+                    total += (fullPriceItems * skuPrice);
+
+                    var discountedSets = item.Value / specialOffer.Quantity;
+                    total += (discountedSets * specialOffer.Price);
+                }
             }
 
             return total;
