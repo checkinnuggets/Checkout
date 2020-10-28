@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using GavinGraffin.Checkout.Models;
 
 namespace GavinGraffin.Checkout

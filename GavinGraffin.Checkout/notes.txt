@@ -1,0 +1,13 @@
+﻿Hour is almost up.  Current thoughts:
+
+- When scanning item, thinking about getting the prices/special offers at that point.
+	- this would allow me to check sku is valid as we go, rather than at the end. 
+	- would also be useful in keeping a running total/having a set of billing lines
+
+- Thinking about whether Special Offer is really a 'thing', or if it's more kind of 'Pricing Levels' with 
+  standard being the price at 1 rather than 'standard'  and 'special' prices.
+
+- Current assumption is that only one special offer per sku.  
+
+- There may also be more complex types of special offer e.g. "Buy X, get Y half price".
+	- That goes in a different direction to 'Pricing  Levels' so would think about that
